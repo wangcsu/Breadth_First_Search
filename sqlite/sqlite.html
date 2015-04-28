@@ -1,0 +1,130 @@
+<html>
+<head>
+<title>CS 4311 SQLite</title>
+</head>
+<body bgcolor="white">
+
+<hr noshade>
+
+<b>CS 4311 SQLite</b>
+
+<hr noshade>
+
+<p>SQLite is a self-contained, serverless, zero-configuration database system.
+It allows SQL commands to query/update databases, stored as ordinary disk files.
+For example, SuppDB is a database, with data in multiple tables, stored in one disk file called sqlite/SuppDB.
+
+<p><b> Directory Structure</b>
+
+<dir>
+<pre>
+cs4311
+  +--> sqlite
+  +--> ex1, ex2, etc.
+</pre>
+</dir>
+
+<p><b> Load Data for Database (already exists; don't need to do this)</b>
+
+<dir>
+<pre>
+linux$ sqlite3 SuppDB &lt;suppDB.dd
+linux$ sqlite3 SuppDB &lt;suppDB.data
+linux$ sqlite3 genDB &lt;genDB.dd
+linux$ sqlite3 genDB &lt;genDB.data
+</pre>
+</dir>
+
+<p> .dd has SQL commands for table names, field names, keys
+
+<p> .data has SQL commands for actual data to insert into tables 
+
+<p><b> Execute a Query in Linux</b>
+
+<dir>
+<pre>
+linux$ cd sqlite
+linux$ cp sqlite-linux sqlite3
+linux$ sqlite3 SuppDB
+sqlite> select * from S;
+sqlite> .quit
+</pre>
+</dir>
+
+<p><b> Execute a Query in Windows</b>
+
+<dir>
+<pre>
+win: cd sqlite 
+win: sqlite3.exe SuppDB
+sqlite> select * from S;
+sqlite> .quit
+</pre>
+</dir>
+
+<p><b> Example Java class with JDBC commands (Page 22 of CS 4311 class notes)</b>
+
+<dir>
+<pre>
+import java.sql.*;
+public class SuppDBquery {
+  public static void main(String args[]) {
+    try {
+      // 1: load specific code to use JDBC
+      Class.forName("org.sqlite.JDBC");
+
+      // 2: establish connection to file (DB) using protocol, file loacation
+      // This connection is for java files on ex1, ex2, etc.
+      // Connection con = DriverManager.getConnection("jdbc:sqlite:../sqlite/SuppDB");
+      // This connection is for SuppDBquery located on the sqlite dir itself
+      Connection con = DriverManager.getConnection("jdbc:sqlite:SuppDB");
+
+      // 3: environment for queries
+      Statement stmt = con.createStatement();
+
+      // 4: SQL query of a supplier table
+      stmt.execute("select * from S where STATUS > 10");
+
+      // 5: rs encapsulates rows which match the query
+      ResultSet rs = stmt.getResultSet();
+
+      // 6: iterate through the rows with a cursor
+      //    next() returns false when cursor goes beyond results
+      while (rs.next()) {
+
+         // 7: extract columns from the row pointed to by the cursor
+         System.out.println(rs.getString("S_NO") + " " + rs.getInt("STATUS"));
+      }
+      // 8: closes READ action, allows READ or WRITE action later
+      rs.close();
+    } catch (Exception e) {System.out.println(e.getMessage());}
+  }
+}
+</pre>
+</dir>
+
+<p><b> Execution of Java class with JDBC commands </b>
+
+<p>From the sqlite directory:
+
+<dir>
+<pre>
+linux$ java -classpath ".:sqlite-jdbc-3.8.6.jar" SuppDBquery
+win  : java -classpath ".;sqlite-jdbc-3.8.6.jar" SuppDBquery
+</pre>
+</dir>
+
+<p>From the ex5 directory (after a student completes Client.java):
+
+<dir>
+<pre>
+linux$ java -classpath ".:../sqlite/sqlite-jdbc-3.8.6.jar" Client
+win  : java -classpath ".;../sqlite/sqlite-jdbc-3.8.6.jar" Client 
+</pre>
+</dir>
+
+
+Here is a handy reference to a <a href="http://www.tutorialspoint.com/sqlite/sqlite_java.htm">SQLite Tutorial</a>
+
+</html>
+

@@ -1,0 +1,38 @@
+create table S (
+  S_NO char(8) primary key,
+  SNAME char(8),
+  STATUS int,
+  CITY char(8)
+);
+create table P (
+  P_NO char(8) primary key,
+  PNAME char(8),
+  COLOR char(8),
+  WEIGHT int,
+  CITY char(8)
+);
+create table SP (
+  S_NO char(8) NOT NULL,
+  P_NO char(8) NOT NULL,
+  QTY int,
+  primary key (S_NO, P_NO),
+  foreign key (S_NO) references S,
+  foreign key (P_NO) references P
+);
+create table J (
+  J_NO char(8) primary key,
+  JNAME char(8),
+  CITY char(8)
+);
+create table SPJ (
+  S_NO char(8) NOT NULL,
+  P_NO char(8) NOT NULL,
+  J_NO char(8) NOT NULL,
+  QTY int, 
+  primary key (S_NO, P_NO, J_NO),
+  foreign key (S_NO) references S,
+  foreign key (P_NO) references P,
+  foreign key (J_NO) references J
+);
+\q
+
